@@ -107,31 +107,48 @@ exports.deleteShift = onCall({ region: "us-east4" }, async (request) => {
  * Expects data: { shiftId: string }
  */
 exports.signUpForShift = onCall({ region: "us-east4" }, async (request) => {
-	if (!request.auth) {
-		throw new HttpsError("unauthenticated", "User must be logged in.");
-	}
-	const uid = request.auth.uid;
+	const uid = request.auth?.uid;
 	const { shiftId } = request.data;
-	if (!shiftId) {
-		throw new HttpsError("invalid-argument", "Shift ID is required.");
+
+	if (!uid || !shiftId) {
+		throw new HttpsError("invalid-argument", "Missing shift ID or not authenticated.");
 	}
+
 	const shiftRef = db.collection("shifts").doc(shiftId);
+	const userRef = db.collection("users").doc(uid);
+
 	try {
-		const shiftDoc = await shiftRef.get();
-		if (!shiftDoc.exists) {
-			throw new HttpsError("not-found", "Shift not found.");
+		const shiftSnap = await shiftRef.get();
+		const userSnap = await userRef.get();
+
+		if (!shiftSnap.exists || !userSnap.exists) {
+			throw new HttpsError("not-found", "Shift or user not found.");
 		}
-		const shiftData = shiftDoc.data();
-		if (shiftData.assignedUsers.includes(uid)) {
+
+		const shiftData = shiftSnap.data();
+		const userData = userSnap.data();
+
+		const assigned = shiftData.assignedUsers || [];
+		const userShifts = userData.shifts || [];
+
+		if (assigned.includes(uid)) {
 			throw new HttpsError("already-exists", "User already signed up for this shift.");
 		}
-		if (shiftData.assignedUsers.length >= shiftData.maxUsers) {
-			throw new HttpsError("resource-exhausted", "Shift is already full.");
+
+		if (assigned.length >= shiftData.maxUsers) {
+			throw new HttpsError("resource-exhausted", "Shift is full.");
 		}
+
+		// Update both documents
 		await shiftRef.update({
-			assignedUsers: admin.firestore.FieldValue.arrayUnion(uid)
+			assignedUsers: [...assigned, uid]
 		});
-		return { success: true, message: "User signed up for shift." };
+
+		await userRef.update({
+			shifts: [...userShifts, shiftId]
+		});
+
+		return { success: true };
 	} catch (error) {
 		throw new HttpsError("internal", error.message);
 	}

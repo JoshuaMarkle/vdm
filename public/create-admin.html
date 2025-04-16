@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Register</title>
+		<title>Create Admin</title>
 	</head>
 	<body>
-		<h1>Register</h1>
-		<form id="registerForm">
+		<h1>Create Admin</h1>
+		<form id="adminForm">
+			<label>Email: <input type="email" id="email" required></label><br>
+			<label>Password: <input type="password" id="password" required></label><br>
 			<label>First Name: <input type="text" id="firstName" required></label><br>
 			<label>Last Name: <input type="text" id="lastName" required></label><br>
-			<label>Email: <input type="email" id="registerEmail" required></label><br>
-			<label>Password: <input type="password" id="registerPassword" required></label><br>
 			<label>Address: <input type="text" id="address"></label><br>
 			<label>Birthday: <input type="date" id="birthday"></label><br>
-			<button type="submit">Register</button>
+			<button type="submit">Create Admin</button>
 		</form>
-		<div id="registerMessage"></div>
+		<div id="message"></div>
 		<script type="module" src="scripts/firebase-config.js"></script>
-		<script type="module" src="scripts/register.js"></script>
+		<script type="module" src="scripts/create-admin.js"></script>
 	</body>
 </html>

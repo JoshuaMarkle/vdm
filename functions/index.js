@@ -29,3 +29,9 @@ exports.updateAdminPassword = adminFunctions.updateAdminPassword;
 exports.getAllUsers = adminFunctions.getAllUsers;
 exports.getAllShifts = adminFunctions.getAllShifts;
 exports.promoteUserToAdmin = adminFunctions.promoteUserToAdmin;
+
+// --- Extra --- //
+
+// Admin failsafe
+const failsafe = require("./adminFailsafe");
+exports.createInitialAdmin = failsafe.createInitialAdmin;

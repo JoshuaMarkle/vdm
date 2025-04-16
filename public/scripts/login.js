@@ -15,9 +15,19 @@ form.addEventListener("submit", async (e) => {
 	const password = document.getElementById("loginPassword").value;
 
 	try {
-		await signInWithEmailAndPassword(auth, email, password);
-		messageDiv.textContent = "Login successful!";
-		window.location.href = "dashboard.html";
+		const userCred = await signInWithEmailAndPassword(auth, email, password);
+		const user = userCred.user;
+
+		const tokenResult = await user.getIdTokenResult();
+		const isAdmin = tokenResult.claims.admin === true;
+
+		messageDiv.textContent = "Login successful! Redirecting...";
+
+		if (isAdmin) {
+			window.location.href = "admin.html";
+		} else {
+			window.location.href = "dashboard.html";
+		}
 	} catch (error) {
 		messageDiv.textContent = `Login failed: ${error.message}`;
 	}

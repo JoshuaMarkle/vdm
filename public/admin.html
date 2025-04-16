@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Admin Dashboard</title>
+	</head>
+	<body>
+		<h1>Admin Dashboard</h1>
+		<button id="logoutButton">Logout</button>
+
+		<h2>All Users</h2>
+		<div id="usersList">
+			<!-- The list of users will be generated here. -->
+		</div>
+
+		<h2>All Shifts</h2>
+		<div id="shiftsList">
+			<!-- The list of shifts will be generated here. -->
+		</div>
+
+		<h2>Create New Shift</h2>
+		<form id="createShiftForm">
+			<label>
+				Date (YYYY-MM-DD):
+				<input type="date" id="shiftDate" required>
+			</label>
+			<br>
+			<label>
+				Time:
+				<input type="text" id="shiftTime" placeholder="e.g., 10:00 AM - 2:00 PM" required>
+			</label>
+			<br>
+			<label>
+				Position:
+				<input type="text" id="shiftPosition" required>
+			</label>
+			<br>
+			<label>
+				Max Users:
+				<input type="number" id="shiftMaxUsers" required>
+			</label>
+			<br>
+			<button type="submit">Create Shift</button>
+		</form>
+		<div id="shiftMessage"></div>
+		<script type="module" src="scripts/firebase-config.js"></script>
+		<script type="module" src="scripts/admin.js"></script>
+	</body>
+</html>
