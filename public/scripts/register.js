@@ -10,7 +10,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
 // Make sure functions are in the right region
-const functions = getFunctions(undefined, "us-east4");
 const createUserFn = httpsCallable(functions, "createUser");
 
 const form = document.getElementById("registerForm");

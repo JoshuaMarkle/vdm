@@ -22,6 +22,7 @@ exports.deleteShift = shiftFunctions.deleteShift;
 exports.signUpForShift = shiftFunctions.signUpForShift;
 exports.checkIntoShift = shiftFunctions.checkIntoShift;
 exports.dropShift = shiftFunctions.dropShift;
+exports.checkIntoShift = shiftFunctions.checkIntoShift;
 
 // Admin Functions
 exports.createAdmin = adminFunctions.createAdmin;
