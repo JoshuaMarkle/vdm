@@ -72,3 +72,7 @@ Pricing:
 - $0.06 per 100,000 reads
 - $0.18 per 100,000 writes
 - Cloud Function calls are negligible at this level
+
+### 👷 Previous Work
+
+This repo is a continuation of [https://github.com/aryanmhaskar/VolunteerVolume](https://github.com/aryanmhaskar/VolunteerVolume)
