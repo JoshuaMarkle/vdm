@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Roboto+Condensed&display=swap');
+
+:root {
+	--black: #171717;
+	--dark-gray: #878287;
+	--gray: #c1bec1;
+	--light-gray: #edeced;
+	--white: #ffffff;
+	--text: #666;
+	--red: #ff5768;
+	--orange: #ffb347;
+	--blue: #55aaff;
+	--teal: #2da7c0;
+	--green: #94B544;
+	--purple: #6c2372;
+	--purple-2: #5a1d5f;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: var(--white);
+	font-family: 'Raleway', sans-serif;
+	color: var(--black);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	margin: 10vh auto;
+	max-width: 1000px;
+	gap: 2rem;
+}
+
+.dashboard-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+h1 {
+	color: var(--teal);
+	font-size: 36px;
+	margin: 0;
+}
+
+h3 {
+	color: var(--green);
+	text-transform: uppercase;
+	margin: 0;
+}
+
+i {
+	font-size: 12px;
+}
+
+.row {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 3rem;
+}
+
+.shifts {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.shift-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.shift {
+	background-color: var(--white);
+	border: 1px solid var(--light-gray);
+	padding: 0.75rem 1rem;
+	border-radius: 6px;
+}
+
+.shift-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.shift-header h4 {
+	margin: 0;
+	font-size: 16px;
+}
+
+.shift-header a {
+	font-size: 14px;
+	text-decoration: none;
+	color: var(--dark-gray);
+}
+
+.shift h5 {
+	font-size: 15px;
+	margin: 0 0 0.5rem;
+	font-weight: 600;
+	color: var(--text);
+}
+
+.shift p {
+	margin: 0;
+	font-size: 14px;
+	color: var(--dark-gray);
+}
+
+.shift-signup-btn {
+	background-color: var(--purple);
+	color: var(--white);
+	padding: 14px;
+	border: none;
+	border-radius: 6px;
+	width: 100%;
+	font-size: 16px;
+	font-family: 'Raleway', sans-serif;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background 0.3s;
+}
+
+.shift-signup-btn:hover {
+	background-color: var(--purple-2);
+}
+
+.stats {
+	width: 260px;
+	background-color: var(--light-gray);
+	padding: 20px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--black);
+}
+
+.logout-btn {
+	background-color: var(--red);
+	color: var(--white);
+	padding: 12px 16px;
+	border: none;
+	font-size: 14px;
+	font-family: 'Raleway', sans-serif;
+	border-radius: 6px;
+	cursor: pointer;
+	width: fit-content;
+	align-self: flex-start;
+	margin-top: 1rem;
+}
+
+.logout-btn:hover {
+	background-color: var(--red);
+}
