@@ -25,7 +25,7 @@ const userShiftsList = document.getElementById("userShiftsList");
 const availableShiftsList = document.getElementById("availableShiftsList");
 
 // Create a shift card (replaces <li> usage)
-function createShiftCard({ date, time, position, cancelable = false, signUpHandler = null }) {
+function createShiftCard({ id, date, time, position, cancelable = false, signUpHandler = null }) {
 	const card = document.createElement("div");
 	card.className = "shift";
 
@@ -38,10 +38,23 @@ function createShiftCard({ date, time, position, cancelable = false, signUpHandl
 	header.appendChild(title);
 
 	if (cancelable) {
-		const cancelLink = document.createElement("a");
-		cancelLink.href = "#";
-		cancelLink.innerHTML = '<i class="fas fa-xmark"></i> Cancel';
-		header.appendChild(cancelLink);
+		const cancelBtn = document.createElement("button");
+		cancelBtn.textContent = "Cancel";
+		cancelBtn.className = "cancel-btn";
+		cancelBtn.onclick = async () => {
+			if (!confirm("Are you sure you want to cancel this shift?")) return;
+
+			try {
+				const dropShift = httpsCallable(functions, "dropShift");
+				await dropShift({ userId: auth.currentUser.uid, shiftId: id });
+				card.remove(); // Remove card from DOM
+			} catch (err) {
+				console.error("Error canceling shift:", err);
+				alert("Failed to cancel shift. Try again.");
+			}
+      };
+
+      header.appendChild(cancelBtn);
 	}
 
 	card.appendChild(header);
@@ -85,6 +98,7 @@ onAuthStateChanged(auth, async (user) => {
 				if (shiftSnap.exists()) {
 					const shiftData = shiftSnap.data();
 					const card = createShiftCard({
+						id: shiftId,
 						date: shiftData.date,
 						time: shiftData.time,
 						position: shiftData.position,

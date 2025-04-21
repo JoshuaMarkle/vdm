@@ -158,3 +158,16 @@ i {
 .logout-btn:hover {
 	background-color: var(--red);
 }
+
+.cancel-btn {
+	background: none;
+	border: none;
+	color: var(--text);
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+	text-decoration: underline;
+	color: var(--red);
+}
