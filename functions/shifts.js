@@ -231,31 +231,33 @@ exports.checkIntoShift = onCall({ region: "us-east4" }, async (request) => {
  * The user can only drop the shift if they haven't checked in yet.
  */
 exports.dropShift = onCall({ region: "us-east4" }, async (request) => {
-	if (!request.auth) {
-		throw new HttpsError("unauthenticated", "User must be logged in.");
+	const { userId, shiftId } = request.data;
+
+	if (!userId || !shiftId) {
+		throw new HttpsError("invalid-argument", "Missing userId or shiftId.");
 	}
-	const uid = request.auth.uid;
-	const { shiftId } = request.data;
-	if (!shiftId) {
-		throw new HttpsError("invalid-argument", "Shift ID is required.");
-	}
+
+	const userRef = db.collection("users").doc(userId);
 	const shiftRef = db.collection("shifts").doc(shiftId);
-	try {
-		const shiftDoc = await shiftRef.get();
-		if (!shiftDoc.exists) {
-			throw new HttpsError("not-found", "Shift not found.");
-		}
-		const shiftData = shiftDoc.data();
-		if (shiftData.signedInUsers.includes(uid)) {
-			throw new HttpsError("failed-precondition", "Cannot drop a shift after checking in.");
-		}
-		await shiftRef.update({
-			assignedUsers: admin.firestore.FieldValue.arrayRemove(uid)
-		});
-		return { success: true, message: "User dropped from shift." };
-	} catch (error) {
-		throw new HttpsError("internal", error.message);
+
+	const [userSnap, shiftSnap] = await Promise.all([userRef.get(), shiftRef.get()]);
+
+	if (!userSnap.exists || !shiftSnap.exists) {
+		throw new HttpsError("not-found", "User or shift not found.");
 	}
+
+	const userData = userSnap.data();
+	const shiftData = shiftSnap.data();
+
+	const updatedUserShifts = (userData.shifts || []).filter((id) => id !== shiftId);
+	const updatedAssignedUsers = (shiftData.assignedUsers || []).filter((id) => id !== userId);
+
+	await Promise.all([
+		userRef.update({ shifts: updatedUserShifts }),
+		shiftRef.update({ assignedUsers: updatedAssignedUsers }),
+	]);
+
+	return { message: "Shift dropped successfully." };
 });
 
 /**

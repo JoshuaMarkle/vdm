@@ -6,11 +6,11 @@ Admin
 - Fix the admin dashboard CSS
 
 Users
-- Fix canceling shifts
-- Add checkin functionality
+- Fix canceling shifts [Done/Josh]
+- Add checkin functionality [Done/Mani]
 
 Misc
-- Add the email reciepts
+- Add the email reciepts [Working/Neil]
 - Create a google calendar
     - Add automation to shift creation
     - Display all of the shifts on a calendar
@@ -20,4 +20,4 @@ Performance
 
 Extra
 - Add CSS animations
-- Add popup cards shifts scheduled for you t
+- Add popup cards

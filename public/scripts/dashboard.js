@@ -34,12 +34,18 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 
 	const title = document.createElement("h4");
 	title.textContent = `${formatDateHumanReadable(date)} - ${position || "Shift"}`;
-
 	header.appendChild(title);
+
+	const timeElem = document.createElement("p");
+	timeElem.style.fontWeight = "bold";
+	timeElem.textContent = time;
+	header.appendChild(timeElem);
+
+	card.appendChild(header);
 
 	if (cancelable) {
 		const cancelBtn = document.createElement("button");
-		cancelBtn.textContent = "Cancel";
+		cancelBtn.textContent = "Drop";
 		cancelBtn.className = "cancel-btn";
 		cancelBtn.onclick = async () => {
 			if (!confirm("Are you sure you want to cancel this shift?")) return;
@@ -47,28 +53,23 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 			try {
 				const dropShift = httpsCallable(functions, "dropShift");
 				await dropShift({ userId: auth.currentUser.uid, shiftId: id });
-				card.remove(); // Remove card from DOM
+				window.location.reload();
+				// card.remove(); // Remove card from DOM
 			} catch (err) {
 				console.error("Error canceling shift:", err);
 				alert("Failed to cancel shift. Try again.");
 			}
-      };
+		};
 
-      header.appendChild(cancelBtn);
+		card.appendChild(cancelBtn);
 	}
-
-	card.appendChild(header);
-
-	const timeElem = document.createElement("p");
-	timeElem.style.fontWeight = "bold";
-	timeElem.textContent = time;
-	card.appendChild(timeElem);
 
 	if (signUpHandler) {
 		const signUpBtn = document.createElement("button");
 		signUpBtn.textContent = "Sign Up";
 		signUpBtn.className = "shift-signup-btn";
 		signUpBtn.addEventListener("click", signUpHandler);
+
 		card.appendChild(signUpBtn);
 	}
 
