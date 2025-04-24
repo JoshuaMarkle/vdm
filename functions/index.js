@@ -13,6 +13,7 @@ exports.createUser = userFunctions.createUser;
 exports.deleteUser = userFunctions.deleteUser;
 exports.updateUserInfo = userFunctions.updateUserInfo;
 exports.updateUserPassword = userFunctions.updateUserPassword;
+exports.checkUserApproval = userFunctions.checkUserApproval;
 
 // Shift Functions
 exports.createShift = shiftFunctions.createShift;

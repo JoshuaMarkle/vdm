@@ -1,9 +1,12 @@
 // Login.js
 
-import { auth } from "./firebase-config.js";
+import { auth, functions } from "./firebase-config.js";
 import {
 	signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {
+	httpsCallable
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
 const form = document.getElementById("loginForm");
 const messageDiv = document.getElementById("loginMessage");
@@ -13,25 +16,26 @@ form.addEventListener("submit", async (e) => {
 
 	const email = document.getElementById("loginEmail").value;
 	const password = document.getElementById("loginPassword").value;
+	messageDiv.textContent = "";
 
 	try {
 		const userCred = await signInWithEmailAndPassword(auth, email, password);
 		const user = userCred.user;
 
-		const tokenResult = await user.getIdTokenResult();
-		const isAdmin = tokenResult.claims.admin === true;
-		const isApproved = tokenResult.claims.approved === true;
+		// Call backend function to find if approved/admin user
+		const checkApproval = httpsCallable(functions, "checkUserApproval");
+		const result = await checkApproval();
 
-		if (isAdmin) {
-			messageDiv.textContent = "Login successful! Redirecting...";
+		if (result.data.isAdmin) {
 			window.location.href = "admin.html";
-		} else if(isApproved) {
-			messageDiv.textContent = "Login successful! Redirecting...";
+		} else if (result.data.approved) {
 			window.location.href = "dashboard.html";
-		}  else{
-			messageDiv.textContent = "User not yet approved!";
+		} else {
+			messageDiv.textContent = "Your account has not been approved yet";
 		}
+
 	} catch (error) {
+		console.error("Login error:", error);
 		messageDiv.textContent = `Login failed: ${error.message}`;
 	}
 });
