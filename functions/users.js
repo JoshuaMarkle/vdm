@@ -136,6 +136,6 @@ exports.checkUserApproval = onCall({ region: "us-east4" }, async (request) => {
 
 	return {
 		approved: user.approved === true,
-		isAdmin: user.isAdmin === true,
+		isAdmin: user.role === "admin",
 	};
 });
