@@ -173,3 +173,43 @@ i {
 	text-decoration: underline;
 	color: var(--red);
 }
+
+/* Table */
+
+.table-container {
+	width: 100%;
+	overflow-x: auto;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 14px;
+	border: 1px solid var(--gray);
+	background-color: var(--white);
+}
+
+table th,
+table td {
+	padding: 12px 14px;
+	text-align: left;
+	border-bottom: 1px solid var(--light-gray);
+}
+
+table th {
+	background-color: var(--light-gray);
+	color: var(--black);
+	font-weight: 600;
+}
+
+table td button {
+	background: none;
+	border: none;
+	color: var(--teal);
+	cursor: pointer;
+	font-family: 'Raleway', sans-serif;
+}
+
+table td button:hover {
+	text-decoration: underline;
+}

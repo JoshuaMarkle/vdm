@@ -114,3 +114,28 @@ exports.updateUserPassword = onCall({ region: "us-east4" }, async (request) => {
 		throw new HttpsError("internal", error.message);
 	}
 });
+
+/**
+ * Check if the user is approved.
+ * Returns an object with two properties: approved (boolean) and isAdmin (boolean).
+ */
+exports.checkUserApproval = onCall({ region: "us-east4" }, async (request) => {
+	if (!request.auth) {
+		throw new HttpsError("unauthenticated", "User must be logged in.");
+	}
+
+	const uid = request.auth.uid;
+	const userRef = db.collection("users").doc(uid);
+	const userSnap = await userRef.get();
+
+	if (!userSnap.exists) {
+		throw new HttpsError("not-found", "User profile not found.");
+	}
+
+	const user = userSnap.data();
+
+	return {
+		approved: user.approved === true,
+		isAdmin: user.isAdmin === true,
+	};
+});
