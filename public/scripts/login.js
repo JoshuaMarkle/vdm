@@ -20,13 +20,16 @@ form.addEventListener("submit", async (e) => {
 
 		const tokenResult = await user.getIdTokenResult();
 		const isAdmin = tokenResult.claims.admin === true;
-
-		messageDiv.textContent = "Login successful! Redirecting...";
+		const isApproved = tokenResult.claims.approved === true;
 
 		if (isAdmin) {
+			messageDiv.textContent = "Login successful! Redirecting...";
 			window.location.href = "admin.html";
-		} else {
+		} else if(isApproved) {
+			messageDiv.textContent = "Login successful! Redirecting...";
 			window.location.href = "dashboard.html";
+		}  else{
+			messageDiv.textContent = "User not yet approved!";
 		}
 	} catch (error) {
 		messageDiv.textContent = `Login failed: ${error.message}`;
