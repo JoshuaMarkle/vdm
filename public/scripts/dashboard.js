@@ -20,19 +20,13 @@ import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/
 const db = getFirestore();
 const functions = getFunctions(undefined, "us-east4");
 
+// DOM Elements
 const userShiftsList = document.getElementById("userShiftsList");
 const availableShiftsList = document.getElementById("availableShiftsList");
-const notificationsList = document.getElementById("notificationsList");
+const notificationList = document.getElementById("notificationList");
+let currentUserData = null;
 
-// Check if user is approved
-if (!userData.approved) {
-	const notice = document.createElement("div");
-	notice.className = "notification-warning";
-	notice.textContent = "Your account is waiting for admin approval. You can view shifts but cannot sign up for any.";
-	notificationsList.appendChild(notice);
-}
-
-// Create a shift card (replaces <li> usage)
+// Create a shift card
 function createShiftCard({ id, date, time, position, cancelable = false, signUpHandler = null }) {
 	const card = document.createElement("div");
 	card.className = "shift";
@@ -51,12 +45,8 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 
 	card.appendChild(header);
 
-	// Check if user is approved
-	if (!userData.approved)
-		return card;
-
 	// Add cancel button
-	if (cancelable) {
+	if (cancelable && currentUserData?.approved) {
 		const cancelBtn = document.createElement("button");
 		cancelBtn.textContent = "Drop";
 		cancelBtn.className = "cancel-btn";
@@ -90,7 +80,7 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 	return card;
 }
 
-// Main logic after auth state is resolved
+// Main auth flow
 onAuthStateChanged(auth, async (user) => {
 	if (!user) {
 		window.location.href = "index.html";
@@ -101,33 +91,55 @@ onAuthStateChanged(auth, async (user) => {
 	const userSnap = await getDoc(userRef);
 
 	if (userSnap.exists()) {
-		const userData = userSnap.data();
+		// Save global userData
+		currentUserData = userSnap.data();
 
-		// Load user shifts
-		const userShifts = userData.shifts || [];
-		userShiftsList.innerHTML = "";
-
-		if (userShifts.length > 0) {
-			for (const shiftId of userShifts) {
-				const shiftSnap = await getDoc(doc(db, "shifts", shiftId));
-				if (shiftSnap.exists()) {
-					const shiftData = shiftSnap.data();
-					const card = createShiftCard({
-						id: shiftId,
-						date: shiftData.date,
-						time: shiftData.time,
-						position: shiftData.position,
-						cancelable: true
-					});
-					userShiftsList.appendChild(card);
-				}
-			}
-		} else {
-			userShiftsList.textContent = "You haven't signed up for any shifts.";
+		// Display "waiting for approval" if needed
+		if (!currentUserData.approved) {
+			const notice = document.createElement("div");
+			const noticeIcon = document.createElement("i");
+			const noticeText = document.createElement("p");
+			notice.className = "notice warning";
+			noticeIcon.className = "fa-solid fa-triangle-exclamation";
+			noticeText.textContent = "Your account is waiting for admin approval. You can view shifts but cannot sign up.";
+			notice.appendChild(noticeIcon);
+			notice.appendChild(noticeText);
+			notificationList.append(notice);
 		}
-	}
 
-	// Load available shifts
+		// Load shifts
+		loadUserShifts();
+		loadAvailableShifts();
+	}
+});
+
+// Load signed-up shifts
+async function loadUserShifts() {
+	const userShifts = currentUserData?.shifts || [];
+	userShiftsList.innerHTML = "";
+
+	if (userShifts.length > 0) {
+		for (const shiftId of userShifts) {
+			const shiftSnap = await getDoc(doc(db, "shifts", shiftId));
+			if (shiftSnap.exists()) {
+				const shiftData = shiftSnap.data();
+				const card = createShiftCard({
+					id: shiftId,
+					date: shiftData.date,
+					time: shiftData.time,
+					position: shiftData.position,
+					cancelable: true
+				});
+				userShiftsList.appendChild(card);
+			}
+		}
+	} else {
+		userShiftsList.textContent = "You haven't signed up for any shifts.";
+	}
+}
+
+// Load available shifts
+async function loadAvailableShifts() {
 	const today = new Date();
 	const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
@@ -147,7 +159,7 @@ onAuthStateChanged(auth, async (user) => {
 			const shiftData = docSnapshot.data();
 
 			if (shiftData.assignedUsers && shiftData.assignedUsers.length >= shiftData.maxUsers) return;
-			if (shiftData.assignedUsers?.includes(user.uid)) return;
+			if (shiftData.assignedUsers?.includes(auth.currentUser.uid)) return;
 
 			const signUpHandler = async () => {
 				const signUpForShift = httpsCallable(functions, "signUpForShift");
@@ -161,6 +173,7 @@ onAuthStateChanged(auth, async (user) => {
 			};
 
 			const card = createShiftCard({
+				id: docSnapshot.id,
 				date: shiftData.date,
 				time: shiftData.time,
 				position: shiftData.position,
@@ -170,7 +183,18 @@ onAuthStateChanged(auth, async (user) => {
 			availableShiftsList.appendChild(card);
 		});
 	}
-});
+}
+
+// Format date nicely
+function formatDateHumanReadable(dateStr) {
+	const [year, month, day] = dateStr.split("-");
+	const months = [
+		"January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	];
+	const monthName = months[parseInt(month, 10) - 1];
+	return `${monthName} ${parseInt(day, 10)}, ${year}`;
+}
 
 // Logout
 document.getElementById("logoutButton").addEventListener("click", async () => {
@@ -181,10 +205,3 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
 		console.error("Logout error:", error);
 	}
 });
-
-// Format date
-function formatDateHumanReadable(dateStr) {
-	const date = new Date(dateStr);
-	const options = { year: 'numeric', month: 'long', day: 'numeric' };
-	return date.toLocaleDateString(undefined, options);
-}
