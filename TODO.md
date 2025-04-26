@@ -2,12 +2,6 @@
 
 ## Main
 
-- Add approval system
-    - Admin approves users
-    - User can login to dashboard but it will say that you must be approved first
-    - User can see shifts but not sign up for any shifts
-- Add popup card for create shift
-- Display shifts with capacity
 - Create automation for shifts
 - Make admin email recipts
 - Integrate with google calendar

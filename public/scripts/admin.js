@@ -60,8 +60,8 @@ async function loadShifts() {
 			<td>${shift.date}</td>
 			<td>${shift.time}</td>
 			<td>${shift.position}</td>
-			<td>${(shift.assignedUsers || []).length}</td>
-			<td>${(shift.signedInUsers || []).length}</td>
+			<td>${(shift.assignedUsers || []).length}/${shift.maxUsers}</td>
+			<td>${(shift.signedInUsers || []).length}/${shift.maxUsers}</td>
 			<td>
 				<button onclick="deleteShift('${docSnap.id}')">Delete</button>
 			</td>

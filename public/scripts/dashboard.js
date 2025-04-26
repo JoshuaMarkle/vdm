@@ -27,7 +27,7 @@ const notificationList = document.getElementById("notificationList");
 let currentUserData = null;
 
 // Create a shift card
-function createShiftCard({ id, date, time, position, cancelable = false, signUpHandler = null }) {
+function createShiftCard({ id, date, time, position, capacity, cancelable = false, signUpHandler = null }) {
 	const card = document.createElement("div");
 	card.className = "shift";
 
@@ -40,7 +40,7 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 
 	const timeElem = document.createElement("p");
 	timeElem.style.fontWeight = "bold";
-	timeElem.textContent = time;
+	timeElem.textContent = `${time} | ${capacity}`;
 	header.appendChild(timeElem);
 
 	card.appendChild(header);
@@ -123,11 +123,14 @@ async function loadUserShifts() {
 			const shiftSnap = await getDoc(doc(db, "shifts", shiftId));
 			if (shiftSnap.exists()) {
 				const shiftData = shiftSnap.data();
+				const assignedCount = shiftData.assignedUsers ? shiftData.assignedUsers.length : 0;
+				const capacity = `${assignedCount}/${shiftData.maxUsers}`;
 				const card = createShiftCard({
 					id: shiftId,
 					date: shiftData.date,
 					time: shiftData.time,
 					position: shiftData.position,
+					capacity: capacity,
 					cancelable: true
 				});
 				userShiftsList.appendChild(card);
@@ -175,11 +178,14 @@ async function loadAvailableShifts() {
 				}
 			};
 
+			const assignedCount = shiftData.assignedUsers ? shiftData.assignedUsers.length : 0;
+			const capacity = `${assignedCount}/${shiftData.maxUsers}`;
 			const card = createShiftCard({
 				id: docSnapshot.id,
 				date: shiftData.date,
 				time: shiftData.time,
 				position: shiftData.position,
+				capacity: capacity,
 				signUpHandler
 			});
 
