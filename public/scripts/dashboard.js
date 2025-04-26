@@ -20,9 +20,17 @@ import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/
 const db = getFirestore();
 const functions = getFunctions(undefined, "us-east4");
 
-// DOM Elements
 const userShiftsList = document.getElementById("userShiftsList");
 const availableShiftsList = document.getElementById("availableShiftsList");
+const notificationsList = document.getElementById("notificationsList");
+
+// Check if user is approved
+if (!userData.approved) {
+	const notice = document.createElement("div");
+	notice.className = "notification-warning";
+	notice.textContent = "Your account is waiting for admin approval. You can view shifts but cannot sign up for any.";
+	notificationsList.appendChild(notice);
+}
 
 // Create a shift card (replaces <li> usage)
 function createShiftCard({ id, date, time, position, cancelable = false, signUpHandler = null }) {
@@ -43,6 +51,11 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 
 	card.appendChild(header);
 
+	// Check if user is approved
+	if (!userData.approved)
+		return card;
+
+	// Add cancel button
 	if (cancelable) {
 		const cancelBtn = document.createElement("button");
 		cancelBtn.textContent = "Drop";
@@ -64,6 +77,7 @@ function createShiftCard({ id, date, time, position, cancelable = false, signUpH
 		card.appendChild(cancelBtn);
 	}
 
+	// Add sign-up button
 	if (signUpHandler) {
 		const signUpBtn = document.createElement("button");
 		signUpBtn.textContent = "Sign Up";

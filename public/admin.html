@@ -7,14 +7,21 @@
 	<link rel="stylesheet" href="styles/dashboard.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Roboto+Condensed&display=swap" rel="stylesheet">
 </head>
 <body>
 	<div class="content">
 		<div class="dashboard-header">
-			<h1>Admin Dashboard</h1>
+			<h1>Dashboard</h1>
+			<div class="dashboard-actions">
+				<button id="create-shift-btn"><i class="fa fa-plus" aria-hidden="true"></i> Create Shift</buttoni>
+				<button class="logout-btn" id="logoutButton"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button>
+			</div>
 		</div>
-
+		<div id="notifications">
+			<!-- Notifications will be generated here -->
+		</div>
 		<div class="row">
 			<div style="flex: 1;" class="content-container">
 				<h3>All Users</h3>
@@ -63,8 +70,6 @@
 			<button type="submit" class="shift-signup-btn">Create Shift</button>
 		</form>
 		<div id="shiftMessage"></div>
-
-		<button class="logout-btn" id="logoutButton">Logout</button>
 	</div>
 	<script type="module" src="scripts/firebase-config.js"></script>
 	<script type="module" src="scripts/admin.js"></script>
