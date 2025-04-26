@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Shift Check-In</title>
+		<title>VDM | Check In </title>
+		<link rel="stylesheet" href="styles/login.css">
+		<link rel="icon" type="image/x-icon" href="./favicon.ico">
 	</head>
 	<body>
-		<h1>Check In</h1>
-		<form id="checkInForm">
-			<label>Email: <input type="email" id="checkInEmail" required></label><br>
-			<button type="submit">Check In</button>
-		</form>
-		<div id="checkInMessage"></div>
+		<div class="container">
+			<img src="./images/logo.png" alt="VDM Logo">
+			<h1>Check In</h1>
+			<p class="description">Please type in your email to check in</p>
+
+			<form id="checkInForm">
+				<label>Email*<br>
+				</label>
+				<input type="email" id="checkInEmail" required>
+				</label>
+				<button type="submit">Check In</button>
+			</form>
+			<p>Not working? Try <a href="index.html">Logging in</a></p>
+			<div id="checkInMessage"></div>
+		</div>
+
 		<script type="module" src="scripts/firebase-config.js"></script>
 		<script type="module" src="scripts/checkin.js"></script>
 	</body>
