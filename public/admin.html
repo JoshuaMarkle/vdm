@@ -12,6 +12,11 @@
 </head>
 <body>
 	<div class="content">
+		<div id="popup-overlay" style="display: none;">
+			<div id="popup-card">
+				<div id="popup-content"></div>
+			</div>
+		</div>
 		<div class="dashboard-header">
 			<h1>Dashboard</h1>
 			<div class="dashboard-actions">
@@ -60,16 +65,6 @@
 				</div>
 			</div>
 		</div>
-
-		<h3>Create New Shift</h3>
-		<form id="createShiftForm" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-			<input type="date" id="shiftDate" required>
-			<input type="text" id="shiftTime" placeholder="e.g., 10:00 AM - 2:00 PM" required>
-			<input type="text" id="shiftPosition" placeholder="Position" required>
-			<input type="number" id="shiftMaxUsers" placeholder="Max Users" required>
-			<button type="submit" class="shift-signup-btn">Create Shift</button>
-		</form>
-		<div id="shiftMessage"></div>
 	</div>
 	<script type="module" src="scripts/firebase-config.js"></script>
 	<script type="module" src="scripts/admin.js"></script>

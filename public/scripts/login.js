@@ -28,10 +28,10 @@ form.addEventListener("submit", async (e) => {
 
 		if (result.data.isAdmin) {
 			window.location.href = "admin.html";
-		} else if (result.data.approved) {
-			window.location.href = "dashboard.html";
+		// } else if (result.data.approved) {
+		// 	window.location.href = "dashboard.html";
 		} else {
-			messageDiv.textContent = "Your account has not been approved yet";
+			window.location.href = "dashboard.html"; 
 		}
 
 	} catch (error) {
